@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
-import { fasterOne } from "@/lib/fonts";
+import { LuLoaderCircle } from "react-icons/lu";
+import { TbLogin2 } from "react-icons/tb";
 
 function Login() {
   const router = useRouter();
@@ -38,8 +38,12 @@ function Login() {
       const data = await res.json();
 
       if (res.ok) {
-        toast.success("Inicio de sesión exitoso");
-        router.push("/dashboard");
+        toast.success("Bienvenido " + (data.user.name || data.user.username));
+        if (data.user.role === "admin") {
+          router.push("/dashboard");
+        } else {
+          router.push("/home");
+        }
       } else {
         toast.error(data.error || "Error al iniciar sesión");
       }
@@ -52,26 +56,30 @@ function Login() {
 
   return (
     <div className="min-h-screen flex justify-center items-center">
-      <img
-        src="/images/fondo-login.webp"
-        alt="fondo-login"
-        className="w-full h-full absolute top-0 left-0 z-0"
-      />
-      <div className="w-full h-full absolute top-0 left-0 z-0 bg-black/50" />
       <Card className="w-full max-w-sm shadow-lg mx-4 relative z-10">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">
             <div className="flex items-center justify-center gap-4">
               <img src="/icons/dota2.svg" alt="logo" className="w-10" />
-              <span className={cn("text-5xl", fasterOne.className)}>JTF</span>
             </div>
           </CardTitle>
           <CardDescription>
             <div className="flex flex-col items-center justify-center">
-              <span className="font-bold text-xl">Bienvenido</span>
-              <span className="text-sm">
-                Ingresa tus datos para iniciar sesión
-              </span>
+              <div className="flex flex-col">
+                <span className="font-bold text-xl">Bienvenido</span>
+                <span className="text-sm">
+                  Ingresa tus datos para iniciar sesión
+                </span>
+              </div>
+              <div className="bg-gray-50 flex flex-col items-center justify-center p-4 rounded-2xl text-center w-full border border-gray-200 mt-4">
+                <span className="font-semibold text-sm">
+                  "La automatización no reemplaza el criterio.
+                </span>
+                <span className="font-semibold text-sm">
+                  No todos los procesos tienen que ser iguales: algunos pueden
+                  ser mejores."
+                </span>
+              </div>
             </div>
           </CardDescription>
         </CardHeader>
@@ -155,20 +163,25 @@ function Login() {
               disabled={loading}
               className="w-full bg-blue-500 hover:bg-blue-600 text-white cursor-pointer"
             >
-              {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
+              {loading ? (
+                <div className="flex items-center gap-2">
+                  <LuLoaderCircle className="w-5 h-5 animate-spin" />
+                  Iniciando sesión...
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <TbLogin2 className="w-5 h-5" />
+                  Iniciar Sesión
+                </div>
+              )}
             </Button>
           </form>
 
-          <div className="text-center mt-6 text-sm text-muted-foreground">
+          <div className="text-center mt-4 text-sm text-muted-foreground">
             <p>¿No tienes una cuenta?</p>
-            <a
-              href="https://wa.me/51929561886"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline font-medium cursor-pointer"
-            >
-              Consulta al administrador
-            </a>
+            <div className="text-gray-800 font-semibold flex items-center justify-center gap-2">
+              ¡Qué Pena! 😔
+            </div>
           </div>
         </CardContent>
       </Card>

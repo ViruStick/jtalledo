@@ -1,0 +1,218 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { FaUserCircle } from "react-icons/fa";
+import { TbLogin } from "react-icons/tb";
+import { LuLoaderCircle } from "react-icons/lu";
+import { TiArrowLeft } from "react-icons/ti";
+import { FaCamera } from "react-icons/fa6";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
+
+interface HomeClientProps {
+  user: {
+    id: string;
+    name: string;
+    username: string;
+    role: string;
+  };
+}
+
+export default function HomeClient({ user }: HomeClientProps) {
+  const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [avatar, setAvatar] = useState<string | null>(null);
+  const [showPicker, setShowPicker] = useState(false);
+  const [avatarsList, setAvatarsList] = useState<string[]>([]);
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.user?.avatar) setAvatar(data.user.avatar);
+      })
+      .catch(() => {});
+  }, []);
+
+  const openPicker = async () => {
+    setSelectedAvatar(avatar);
+    setShowPicker(true);
+    if (avatarsList.length === 0) {
+      try {
+        const res = await fetch("/api/avatars");
+        const data = await res.json();
+        setAvatarsList(data.avatars);
+      } catch {}
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const res = await fetch("/api/auth/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ avatar: selectedAvatar }),
+      });
+      if (res.ok) {
+        setAvatar(selectedAvatar);
+        setShowPicker(false);
+      }
+    } catch {}
+  };
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.push("/");
+  };
+
+  return (
+    <div className="m-8 rounded-4xl overflow-hidden h-[calc(100vh-4rem)] bg-gray-200 backdrop-blur-sm shadow-2xl grid grid-cols-[280px_1fr]">
+      <aside className="bg-gray-200 flex flex-col h-full">
+        <nav className="bg-white rounded-2xl flex-1 p-4 space-y-1 mx-3 mt-3">
+          <h2 className="text-2xl font-bold mb-4">Menú</h2>
+          <div className="">
+            <button className="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer">
+              Menú 1
+            </button>
+            <button className="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer">
+              Menú 2
+            </button>
+            <button className="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer">
+              Menú 3
+            </button>
+          </div>
+        </nav>
+
+        <div className="flex justify-between bg-white rounded-2xl p-3 m-3">
+          <div className="flex flex-col items-center gap-1">
+            <button
+              onClick={openPicker}
+              className="relative group cursor-pointer"
+            >
+              {avatar ? (
+                <img
+                  src={`/avatars/${avatar}`}
+                  alt="avatar"
+                  className="w-14 h-14 rounded-full object-cover"
+                />
+              ) : (
+                <FaUserCircle className="text-5xl text-gray-400" />
+              )}
+              <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <FaCamera className="text-white text-lg" />
+              </div>
+            </button>
+            <p className="text-sm font-semibold text-gray-900 truncate">
+              {user.name}
+            </p>
+          </div>
+
+          <div className="flex flex-col items-center gap-2">
+            {user.role === "admin" && (
+              <Button
+                onClick={() => router.push("/dashboard")}
+                className="w-full gap-1 bg-blue-600 hover:bg-blue-500 text-white cursor-pointer"
+              >
+                <TiArrowLeft />
+                <p>Ir a Inicio</p>
+              </Button>
+            )}
+
+            <Button
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className="w-full bg-red-600 hover:bg-red-500 text-white cursor-pointer text-sm"
+            >
+              {loggingOut ? (
+                <div className="flex items-center gap-1">
+                  <LuLoaderCircle className="animate-spin mb-0.5" />
+                  <p>Cerrando sesión...</p>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1">
+                  <TbLogin className="mb-0.5" />
+                  <p>Cerrar sesión</p>
+                </div>
+              )}
+            </Button>
+          </div>
+        </div>
+      </aside>
+
+      <main className="flex items-center justify-center bg-white my-3 mr-3 rounded-2xl">
+        <div className="text-gray-400 text-lg">
+          Selecciona una opción del menú
+        </div>
+      </main>
+
+      <AlertDialog
+        open={showPicker}
+        onOpenChange={(open) => !open && setShowPicker(false)}
+      >
+        <AlertDialogContent className="max-w-lg">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Selecciona tu avatar</AlertDialogTitle>
+            <AlertDialogDescription>
+              Elige una imagen para tu perfil o selecciona "Ninguno"
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="grid grid-cols-4 gap-3 py-4 max-h-100 overflow-y-auto">
+            <button
+              onClick={() => setSelectedAvatar(null)}
+              className={cn(
+                "flex items-center justify-center aspect-square rounded-full border-2 transition-all cursor-pointer",
+                selectedAvatar === null
+                  ? "border-blue-600 ring-2 ring-blue-400 bg-blue-50"
+                  : "border-dashed border-gray-300 hover:border-gray-400 bg-gray-50",
+              )}
+            >
+              <span className="text-xs font-medium text-gray-500">Ninguno</span>
+            </button>
+            {avatarsList.map((filename) => (
+              <button
+                key={filename}
+                onClick={() => setSelectedAvatar(filename)}
+                className={cn(
+                  "rounded-full overflow-hidden aspect-square cursor-pointer border-2 transition-all hover:border-blue-500",
+                  selectedAvatar === filename
+                    ? "border-blue-600 ring-2 ring-blue-400"
+                    : "border-transparent",
+                )}
+              >
+                <img
+                  src={`/avatars/${filename}`}
+                  alt={filename}
+                  className="w-full h-full object-cover"
+                />
+              </button>
+            ))}
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="cursor-pointer">
+              Cancelar
+            </AlertDialogCancel>
+            <Button
+              onClick={handleSave}
+              disabled={selectedAvatar === avatar}
+              className="bg-blue-600 hover:bg-blue-500 text-white cursor-pointer"
+            >
+              Guardar
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}

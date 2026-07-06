@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Figtree } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -39,9 +40,17 @@ export default function RootLayout({
       )}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
-        <main>{children}</main>
-        <Toaster position="top-center" theme="light" duration={2000} />
+      <body className="min-h-screen flex flex-col">
+        <img
+          src="/images/fondo-login.webp"
+          alt=""
+          className="fixed top-0 left-0 w-full h-full object-cover z-0"
+        />
+        <div className="fixed top-0 left-0 w-full h-full backdrop-blur-sm bg-black/20 z-1" />
+        <TooltipProvider>
+          <main className="relative z-2">{children}</main>
+        </TooltipProvider>
+        <Toaster position="top-right" theme="light" duration={2000} />
       </body>
     </html>
   );

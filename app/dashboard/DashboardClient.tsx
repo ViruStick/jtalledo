@@ -10,10 +10,15 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { TbLogin } from "react-icons/tb";
+import { LuLoaderCircle } from "react-icons/lu";
+import { HiUsers } from "react-icons/hi";
+import { MdEditDocument } from "react-icons/md";
 
 interface DashboardClientProps {
   user: {
     id: string;
+    name: string;
     username: string;
     role: string;
   };
@@ -30,31 +35,52 @@ export default function DashboardClient({ user }: DashboardClientProps) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-br from-blue-400 via-blue-300 to-purple-200">
+    <div className="min-h-screen flex flex-col items-center justify-center">
       <Card className="w-full max-w-xs shadow-lg text-center mx-4">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Bienvenido</CardTitle>
+          <CardTitle className="text-2xl font-bold">
+            Bienvenido {user.name}
+          </CardTitle>
           <CardDescription className="text-base">
             Has iniciado sesión como <strong>{user.username}</strong>
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           {user.role === "admin" && (
-            <Button
-              onClick={() => router.push("/admin/users")}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
-            >
-              Gestionar Usuarios
-            </Button>
+            <>
+              <Button
+                onClick={() => router.push("/home")}
+                className="w-full gap-2 bg-indigo-600 hover:bg-indigo-500 text-white cursor-pointer"
+              >
+                <MdEditDocument />
+                Ir al Dashboard
+              </Button>
+              <Button
+                onClick={() => router.push("/admin/users")}
+                className="w-full gap-2 bg-blue-600 hover:bg-blue-500 text-white cursor-pointer"
+              >
+                <HiUsers />
+                Gestionar Usuarios
+              </Button>
+            </>
           )}
 
           <Button
             onClick={handleLogout}
             disabled={loggingOut}
-            variant="secondary"
-            className="w-full cursor-pointer"
+            className="w-full bg-red-600 hover:bg-red-500 text-white cursor-pointer"
           >
-            {loggingOut ? "Cerrando sesión..." : "Cerrar sesión"}
+            {loggingOut ? (
+              <div className="flex items-center gap-2">
+                <LuLoaderCircle className="animate-spin" />
+                <p>Cerrando sesión...</p>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <TbLogin />
+                <p>Cerrar sesión</p>
+              </div>
+            )}
           </Button>
         </CardContent>
       </Card>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
-import { getUsers, createUser, deleteUser } from "@/lib/db";
+import { getUsers, createUser, deleteUser, resetPassword, updateUser } from "@/lib/db";
 
 function checkAdmin(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
@@ -30,17 +30,63 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { username, password } = await request.json();
-    if (!username || !password) {
+    const { username, password, name } = await request.json();
+    if (!username || !password || !name) {
       return NextResponse.json(
-        { error: "Usuario y contraseña requeridos" },
+        { error: "Nombre, usuario y contraseña requeridos" },
         { status: 400 }
       );
     }
-    const user = await createUser(username, password);
+    const user = await createUser(username, password, name);
     return NextResponse.json({ user }, { status: 201 });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Error al crear usuario";
+    return NextResponse.json({ error: message }, { status: 400 });
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  const admin = checkAdmin(request);
+  if (!admin) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
+  try {
+    const { id, password } = await request.json();
+    if (!id || !password) {
+      return NextResponse.json(
+        { error: "ID y contraseña requeridos" },
+        { status: 400 }
+      );
+    }
+    await resetPassword(id, password);
+    return NextResponse.json({ success: true });
+  } catch (e) {
+    const message =
+      e instanceof Error ? e.message : "Error al restablecer contraseña";
+    return NextResponse.json({ error: message }, { status: 400 });
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  const admin = checkAdmin(request);
+  if (!admin) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
+  try {
+    const { id, name, username } = await request.json();
+    if (!id || !name || !username) {
+      return NextResponse.json(
+        { error: "ID, nombre y usuario requeridos" },
+        { status: 400 }
+      );
+    }
+    await updateUser(id, name, username);
+    return NextResponse.json({ success: true });
+  } catch (e) {
+    const message =
+      e instanceof Error ? e.message : "Error al editar usuario";
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

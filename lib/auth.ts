@@ -13,6 +13,7 @@ export function comparePassword(password: string, hash: string): boolean {
 
 export function generateToken(payload: {
   id: string;
+  name: string;
   username: string;
   role: string;
 }): string {
@@ -21,9 +22,10 @@ export function generateToken(payload: {
 
 export function verifyToken(
   token: string
-): { id: string; username: string; role: string } {
+): { id: string; name: string; username: string; role: string } {
   return jwt.verify(token, JWT_SECRET) as {
     id: string;
+    name: string;
     username: string;
     role: string;
   };

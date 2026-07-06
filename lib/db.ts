@@ -5,10 +5,12 @@ const USERS_KEY = "users";
 
 export interface User {
   id: string;
+  name: string;
   username: string;
   password: string;
   role: "admin" | "user";
   createdAt: string;
+  avatar?: string;
 }
 
 async function getUsersData(): Promise<User[]> {
@@ -21,6 +23,7 @@ async function saveUsers(users: User[]): Promise<void> {
 
 export async function seedAdmin(): Promise<void> {
   const users = await getUsersData();
+  const adminName = process.env.ADMIN_NAME || "Administrador";
   const adminUsername = process.env.ADMIN_USERNAME;
   const adminPassword = process.env.ADMIN_PASSWORD;
 
@@ -28,10 +31,27 @@ export async function seedAdmin(): Promise<void> {
     throw new Error("ADMIN_USERNAME and ADMIN_PASSWORD must be set");
   }
 
+  let needsSave = false;
+
+  for (const user of users) {
+    if (!user.name) {
+      user.name = user.username;
+      needsSave = true;
+    }
+  }
+
   const existingAdmin = users.find((u) => u.role === "admin");
+  if (existingAdmin && existingAdmin.name !== adminName) {
+    existingAdmin.name = adminName;
+    needsSave = true;
+  }
+
+  if (needsSave) await saveUsers(users);
+
   if (!existingAdmin) {
     users.push({
       id: "1",
+      name: adminName,
       username: adminUsername,
       password: hashPassword(adminPassword),
       role: "admin",
@@ -55,7 +75,8 @@ export async function findUserByUsername(
 
 export async function createUser(
   username: string,
-  password: string
+  password: string,
+  name: string
 ): Promise<Omit<User, "password">> {
   const users = await getUsersData();
   if (users.find((u) => u.username === username)) {
@@ -63,6 +84,7 @@ export async function createUser(
   }
   const newUser: User = {
     id: String(Date.now()),
+    name,
     username,
     password: hashPassword(password),
     role: "user",
@@ -72,6 +94,51 @@ export async function createUser(
   await saveUsers(users);
   const { password: _, ...rest } = newUser;
   return rest;
+}
+
+export async function resetPassword(
+  id: string,
+  newPassword: string
+): Promise<void> {
+  const users = await getUsersData();
+  const user = users.find((u) => u.id === id);
+  if (!user) throw new Error("Usuario no encontrado");
+  if (user.role === "admin") throw new Error("No se puede cambiar la contraseña del admin");
+  user.password = hashPassword(newPassword);
+  await saveUsers(users);
+}
+
+export async function updateAvatar(
+  id: string,
+  avatar: string | null
+): Promise<void> {
+  const users = await getUsersData();
+  const user = users.find((u) => u.id === id);
+  if (!user) throw new Error("Usuario no encontrado");
+  if (avatar) {
+    user.avatar = avatar;
+  } else {
+    delete user.avatar;
+  }
+  await saveUsers(users);
+}
+
+export async function updateUser(
+  id: string,
+  name: string,
+  username: string
+): Promise<void> {
+  const users = await getUsersData();
+  const user = users.find((u) => u.id === id);
+  if (!user) throw new Error("Usuario no encontrado");
+  if (user.role === "admin") throw new Error("No se puede editar al admin");
+
+  const existing = users.find((u) => u.username === username && u.id !== id);
+  if (existing) throw new Error("El nombre de usuario ya está en uso");
+
+  user.name = name;
+  user.username = username;
+  await saveUsers(users);
 }
 
 export async function deleteUser(id: string): Promise<void> {
