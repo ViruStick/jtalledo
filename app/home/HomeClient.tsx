@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { FaUserCircle } from "react-icons/fa";
 import { TbLogin } from "react-icons/tb";
 import { LuLoaderCircle } from "react-icons/lu";
-import { TiArrowLeft } from "react-icons/ti";
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { FaCamera } from "react-icons/fa6";
 import {
   AlertDialog,
@@ -35,6 +35,8 @@ export default function HomeClient({ user }: HomeClientProps) {
   const [showPicker, setShowPicker] = useState(false);
   const [avatarsList, setAvatarsList] = useState<string[]>([]);
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -58,6 +60,7 @@ export default function HomeClient({ user }: HomeClientProps) {
   };
 
   const handleSave = async () => {
+    setLoading(true);
     try {
       const res = await fetch("/api/auth/me", {
         method: "PATCH",
@@ -67,6 +70,7 @@ export default function HomeClient({ user }: HomeClientProps) {
       if (res.ok) {
         setAvatar(selectedAvatar);
         setShowPicker(false);
+        setLoading(false);
       }
     } catch {}
   };
@@ -77,20 +81,72 @@ export default function HomeClient({ user }: HomeClientProps) {
     router.push("/");
   };
 
+  const menuDisposiciones = [
+    "Aperturas",
+    "Aplicaciones",
+    "Formalización",
+    "Conclusión",
+    "Archivos",
+    "Elevación de Actuados",
+    "Derivaciones",
+    "Acumulación",
+    "Impulso",
+  ];
+
+  const menuRequerimientos = [
+    "Detención Preliminar",
+    "Prisión Preventiva",
+    "Prolongación de Prisión Preventiva",
+    "Levantamiento del Secreto de las Comunicaciones",
+    "Levantamiento del Secreto Bancario",
+    "Acusación",
+    "Sobreseimiento",
+    "Terminación Anticipada",
+    "Conclusión Anticipada",
+  ];
+
   return (
-    <div className="m-8 rounded-4xl overflow-hidden h-[calc(100vh-4rem)] bg-gray-200 backdrop-blur-sm shadow-2xl grid grid-cols-[280px_1fr]">
+    <div className="m-8 rounded-4xl overflow-hidden h-[calc(100vh-4rem)] bg-gray-200 grid grid-cols-[280px_1fr]">
       <aside className="bg-gray-200 flex flex-col h-full">
-        <nav className="bg-white rounded-2xl flex-1 p-4 space-y-1 mx-3 mt-3">
+        <nav className="bg-white rounded-2xl flex-1 p-4 2xl:p-6 mx-3 mt-3">
           <h2 className="text-2xl font-bold mb-4">Menú</h2>
-          <div className="">
-            <button className="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer">
-              Menú 1
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => setActiveMenu("disposiciones")}
+              className={cn(
+                "w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer",
+                activeMenu === "disposiciones"
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-700 hover:bg-gray-100 hover:text-gray-900",
+              )}
+            >
+              Disposiciones
             </button>
-            <button className="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer">
-              Menú 2
+            <button
+              onClick={() => setActiveMenu("requerimientos")}
+              className={cn(
+                "w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer",
+                activeMenu === "requerimientos"
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-700 hover:bg-gray-100 hover:text-gray-900",
+              )}
+            >
+              Requerimientos
             </button>
-            <button className="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer">
-              Menú 3
+            <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors cursor-pointer">
+              Providencias
+            </button>
+            <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors cursor-pointer">
+              Actas
+            </button>
+            <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors cursor-pointer">
+              Declaraciones
+            </button>
+            <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors cursor-pointer">
+              Oficios
+            </button>
+            <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-600 transition-colors cursor-pointer">
+              Directorio
             </button>
           </div>
         </nav>
@@ -119,14 +175,14 @@ export default function HomeClient({ user }: HomeClientProps) {
             </p>
           </div>
 
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col justify-center items-center gap-1">
             {user.role === "admin" && (
               <Button
                 onClick={() => router.push("/dashboard")}
                 className="w-full gap-1 bg-blue-600 hover:bg-blue-500 text-white cursor-pointer"
               >
-                <TiArrowLeft />
-                <p>Ir a Inicio</p>
+                <MdOutlineKeyboardArrowLeft />
+                <p className="text-xs">Centro Control</p>
               </Button>
             )}
 
@@ -137,13 +193,13 @@ export default function HomeClient({ user }: HomeClientProps) {
             >
               {loggingOut ? (
                 <div className="flex items-center gap-1">
-                  <LuLoaderCircle className="animate-spin mb-0.5" />
-                  <p>Cerrando sesión...</p>
+                  <LuLoaderCircle className="animate-spin" />
+                  <p className="text-xs">Cerrando sesión...</p>
                 </div>
               ) : (
                 <div className="flex items-center gap-1">
-                  <TbLogin className="mb-0.5" />
-                  <p>Cerrar sesión</p>
+                  <TbLogin />
+                  <p className="text-xs">Cerrar sesión</p>
                 </div>
               )}
             </Button>
@@ -151,10 +207,34 @@ export default function HomeClient({ user }: HomeClientProps) {
         </div>
       </aside>
 
-      <main className="flex items-center justify-center bg-white my-3 mr-3 rounded-2xl">
-        <div className="text-gray-400 text-lg">
-          Selecciona una opción del menú
-        </div>
+      <main className="bg-white my-3 mr-3 rounded-2xl p-6">
+        {activeMenu === "disposiciones" ? (
+          <div className="grid grid-cols-3 gap-4 h-full">
+            {menuDisposiciones.map((disposicion) => (
+              <button
+                key={disposicion}
+                className="flex items-center justify-center rounded-xl border border-gray-200 bg-gray-50 p-6 text-xl font-medium text-gray-700 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors cursor-pointer"
+              >
+                {disposicion}
+              </button>
+            ))}
+          </div>
+        ) : activeMenu === "requerimientos" ? (
+          <div className="grid grid-cols-3 gap-4 h-full">
+            {menuRequerimientos.map((requerimiento) => (
+              <button
+                key={requerimiento}
+                className="flex items-center justify-center rounded-xl border border-gray-200 bg-gray-50 p-6 text-xl font-medium text-gray-700 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors cursor-pointer"
+              >
+                {requerimiento}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="flex items-center justify-center text-gray-400 text-lg h-full">
+            Selecciona una opción del menú
+          </div>
+        )}
       </main>
 
       <AlertDialog
@@ -205,10 +285,19 @@ export default function HomeClient({ user }: HomeClientProps) {
             </AlertDialogCancel>
             <Button
               onClick={handleSave}
-              disabled={selectedAvatar === avatar}
+              disabled={selectedAvatar === avatar || loading}
               className="bg-blue-600 hover:bg-blue-500 text-white cursor-pointer"
             >
-              Guardar
+              {loading ? (
+                <div className="flex items-center gap-1">
+                  <LuLoaderCircle className="animate-spin" />
+                  <p>Guardando...</p>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1">
+                  <p>Guardar</p>
+                </div>
+              )}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

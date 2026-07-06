@@ -23,7 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { FaArrowLeft } from "react-icons/fa";
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 import { PiPasswordBold } from "react-icons/pi";
@@ -193,8 +193,8 @@ export default function AdminUsersClient() {
             variant="secondary"
             className="w-full sm:w-auto cursor-pointer"
           >
-            <FaArrowLeft />
-            Volver al Dashboard
+            <MdOutlineKeyboardArrowLeft />
+            Centro Control
           </Button>
         </div>
 

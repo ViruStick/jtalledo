@@ -39,7 +39,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
       <Card className="w-full max-w-xs shadow-lg text-center mx-4">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
-            Bienvenido {user.name}
+            Centro de Control
           </CardTitle>
           <CardDescription className="text-base">
             Has iniciado sesión como <strong>{user.username}</strong>
@@ -53,7 +53,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                 className="w-full gap-2 bg-indigo-600 hover:bg-indigo-500 text-white cursor-pointer"
               >
                 <MdEditDocument />
-                Ir al Dashboard
+                Ir al Menu Principal
               </Button>
               <Button
                 onClick={() => router.push("/admin/users")}
