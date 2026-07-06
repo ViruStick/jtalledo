@@ -53,14 +53,14 @@ export default function DashboardClient({ user }: DashboardClientProps) {
                 className="w-full gap-2 bg-indigo-600 hover:bg-indigo-500 text-white cursor-pointer"
               >
                 <MdEditDocument />
-                Ir al Menu Principal
+                Ir al menu principal
               </Button>
               <Button
                 onClick={() => router.push("/admin/users")}
                 className="w-full gap-2 bg-blue-600 hover:bg-blue-500 text-white cursor-pointer"
               >
                 <HiUsers />
-                Gestionar Usuarios
+                Gestionar usuarios
               </Button>
             </>
           )}

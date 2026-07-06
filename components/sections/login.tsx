@@ -73,10 +73,10 @@ function Login() {
               </div>
               <div className="bg-gray-50 flex flex-col items-center justify-center p-4 rounded-2xl text-center w-full border border-gray-200 mt-4">
                 <span className="font-semibold text-sm">
-                  "La automatización no reemplaza el criterio.
+                  "La automatización no reemplaza el criterio
                 </span>
                 <span className="font-semibold text-sm">
-                  No todos los procesos tienen que ser iguales: algunos pueden
+                  no todos los procesos tienen que ser iguales: algunos pueden
                   ser mejores."
                 </span>
               </div>

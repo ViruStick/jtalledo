@@ -83,7 +83,7 @@ export default function HomeClient({ user }: HomeClientProps) {
 
   const menuDisposiciones = [
     "Aperturas",
-    "Aplicaciones",
+    "Ampliaciones",
     "Formalización",
     "Conclusión",
     "Archivos",
@@ -182,7 +182,7 @@ export default function HomeClient({ user }: HomeClientProps) {
                 className="w-full gap-1 bg-blue-600 hover:bg-blue-500 text-white cursor-pointer"
               >
                 <MdOutlineKeyboardArrowLeft />
-                <p className="text-xs">Centro Control</p>
+                <p className="text-xs">Centro control</p>
               </Button>
             )}
 

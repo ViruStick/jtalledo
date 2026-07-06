@@ -30,14 +30,14 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { username, password, name } = await request.json();
+    const { username, password, name, despachoFiscal } = await request.json();
     if (!username || !password || !name) {
       return NextResponse.json(
         { error: "Nombre, usuario y contraseña requeridos" },
         { status: 400 }
       );
     }
-    const user = await createUser(username, password, name);
+    const user = await createUser(username, password, name, despachoFiscal);
     return NextResponse.json({ user }, { status: 201 });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Error al crear usuario";
@@ -75,14 +75,14 @@ export async function PUT(request: NextRequest) {
   }
 
   try {
-    const { id, name, username } = await request.json();
+    const { id, name, username, despachoFiscal } = await request.json();
     if (!id || !name || !username) {
       return NextResponse.json(
         { error: "ID, nombre y usuario requeridos" },
         { status: 400 }
       );
     }
-    await updateUser(id, name, username);
+    await updateUser(id, name, username, despachoFiscal);
     return NextResponse.json({ success: true });
   } catch (e) {
     const message =

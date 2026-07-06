@@ -36,6 +36,7 @@ interface User {
   username: string;
   role: string;
   createdAt: string;
+  despachoFiscal?: string;
 }
 
 export default function AdminUsersClient() {
@@ -43,6 +44,7 @@ export default function AdminUsersClient() {
   const [users, setUsers] = useState<User[]>([]);
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
+  const [despachoFiscal, setDespachoFiscal] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -56,6 +58,7 @@ export default function AdminUsersClient() {
   const [editTarget, setEditTarget] = useState<User | null>(null);
   const [editName, setEditName] = useState("");
   const [editUsername, setEditUsername] = useState("");
+  const [editDespachoFiscal, setEditDespachoFiscal] = useState("");
   const [loading, setLoading] = useState(false);
 
   const fetchUsers = async () => {
@@ -83,13 +86,19 @@ export default function AdminUsersClient() {
     const res = await fetch("/api/auth/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password, name }),
+      body: JSON.stringify({
+        username,
+        password,
+        name,
+        despachoFiscal: despachoFiscal || undefined,
+      }),
     });
 
     if (res.ok) {
       toast.success(`Usuario "${username}" creado correctamente`);
       setName("");
       setUsername("");
+      setDespachoFiscal("");
       setPassword("");
       setConfirmPassword("");
       setLoading(false);
@@ -108,6 +117,7 @@ export default function AdminUsersClient() {
     setEditTarget(user);
     setEditName(user.name);
     setEditUsername(user.username);
+    setEditDespachoFiscal(user.despachoFiscal || "");
   };
 
   const confirmEdit = async () => {
@@ -120,6 +130,7 @@ export default function AdminUsersClient() {
         id: editTarget.id,
         name: editName,
         username: editUsername,
+        despachoFiscal: editDespachoFiscal || undefined,
       }),
     });
 
@@ -227,6 +238,16 @@ export default function AdminUsersClient() {
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Nombre de usuario"
                     required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="new-despacho">Despacho Fiscal</Label>
+                  <Input
+                    id="new-despacho"
+                    type="text"
+                    value={despachoFiscal}
+                    onChange={(e) => setDespachoFiscal(e.target.value)}
+                    placeholder="Despacho Fiscal"
                   />
                 </div>
                 <div className="space-y-2">
@@ -371,7 +392,7 @@ export default function AdminUsersClient() {
                   No hay usuarios registrados
                 </p>
               ) : (
-                <div className="space-y-3 max-h-90 overflow-y-auto">
+                <div className="space-y-3 max-h-105 overflow-y-auto">
                   {users.map((user) => (
                     <div
                       key={user.id}
@@ -392,6 +413,14 @@ export default function AdminUsersClient() {
                           </span>
                           <span className="font-semibold text-sm">
                             {user.username}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-sm font-semibold text-muted-foreground">
+                            Despacho Fiscal:{" "}
+                          </span>
+                          <span className="font-semibold text-sm">
+                            {user.despachoFiscal || "—"}
                           </span>
                         </div>
                         <div>
@@ -647,6 +676,16 @@ export default function AdminUsersClient() {
                 value={editUsername}
                 onChange={(e) => setEditUsername(e.target.value)}
                 placeholder="Nombre de usuario"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-despacho">Despacho Fiscal</Label>
+              <Input
+                id="edit-despacho"
+                type="text"
+                value={editDespachoFiscal}
+                onChange={(e) => setEditDespachoFiscal(e.target.value)}
+                placeholder="Despacho Fiscal"
               />
             </div>
           </div>

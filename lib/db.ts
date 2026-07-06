@@ -11,6 +11,7 @@ export interface User {
   role: "admin" | "user";
   createdAt: string;
   avatar?: string;
+  despachoFiscal?: string;
 }
 
 async function getUsersData(): Promise<User[]> {
@@ -76,7 +77,8 @@ export async function findUserByUsername(
 export async function createUser(
   username: string,
   password: string,
-  name: string
+  name: string,
+  despachoFiscal?: string
 ): Promise<Omit<User, "password">> {
   const users = await getUsersData();
   if (users.find((u) => u.username === username)) {
@@ -89,6 +91,7 @@ export async function createUser(
     password: hashPassword(password),
     role: "user",
     createdAt: new Date().toISOString(),
+    despachoFiscal: despachoFiscal || undefined,
   };
   users.push(newUser);
   await saveUsers(users);
@@ -126,7 +129,8 @@ export async function updateAvatar(
 export async function updateUser(
   id: string,
   name: string,
-  username: string
+  username: string,
+  despachoFiscal?: string
 ): Promise<void> {
   const users = await getUsersData();
   const user = users.find((u) => u.id === id);
@@ -138,6 +142,7 @@ export async function updateUser(
 
   user.name = name;
   user.username = username;
+  user.despachoFiscal = despachoFiscal || undefined;
   await saveUsers(users);
 }
 
