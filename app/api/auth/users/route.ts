@@ -1,0 +1,63 @@
+import { NextRequest, NextResponse } from "next/server";
+import { verifyToken } from "@/lib/auth";
+import { getUsers, createUser, deleteUser } from "@/lib/db";
+
+function checkAdmin(request: NextRequest) {
+  const token = request.cookies.get("token")?.value;
+  if (!token) return null;
+  try {
+    const payload = verifyToken(token);
+    if (payload.role !== "admin") return null;
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
+export async function GET(request: NextRequest) {
+  const admin = checkAdmin(request);
+  if (!admin) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+  const users = await getUsers();
+  return NextResponse.json({ users });
+}
+
+export async function POST(request: NextRequest) {
+  const admin = checkAdmin(request);
+  if (!admin) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
+  try {
+    const { username, password } = await request.json();
+    if (!username || !password) {
+      return NextResponse.json(
+        { error: "Usuario y contraseña requeridos" },
+        { status: 400 }
+      );
+    }
+    const user = await createUser(username, password);
+    return NextResponse.json({ user }, { status: 201 });
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Error al crear usuario";
+    return NextResponse.json({ error: message }, { status: 400 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  const admin = checkAdmin(request);
+  if (!admin) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
+  try {
+    const { id } = await request.json();
+    await deleteUser(id);
+    return NextResponse.json({ success: true });
+  } catch (e) {
+    const message =
+      e instanceof Error ? e.message : "Error al eliminar usuario";
+    return NextResponse.json({ error: message }, { status: 400 });
+  }
+}

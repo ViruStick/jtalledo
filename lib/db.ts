@@ -1,0 +1,84 @@
+import { kv } from "@vercel/kv";
+import { hashPassword } from "./auth";
+
+const USERS_KEY = "users";
+
+export interface User {
+  id: string;
+  username: string;
+  password: string;
+  role: "admin" | "user";
+  createdAt: string;
+}
+
+async function getUsersData(): Promise<User[]> {
+  return (await kv.get<User[]>(USERS_KEY)) ?? [];
+}
+
+async function saveUsers(users: User[]): Promise<void> {
+  await kv.set(USERS_KEY, users);
+}
+
+export async function seedAdmin(): Promise<void> {
+  const users = await getUsersData();
+  const adminUsername = process.env.ADMIN_USERNAME;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+
+  if (!adminUsername || !adminPassword) {
+    throw new Error("ADMIN_USERNAME and ADMIN_PASSWORD must be set");
+  }
+
+  const existingAdmin = users.find((u) => u.role === "admin");
+  if (!existingAdmin) {
+    users.push({
+      id: "1",
+      username: adminUsername,
+      password: hashPassword(adminPassword),
+      role: "admin",
+      createdAt: new Date().toISOString(),
+    });
+    await saveUsers(users);
+  }
+}
+
+export async function getUsers(): Promise<Omit<User, "password">[]> {
+  const users = await getUsersData();
+  return users.map(({ password: _, ...rest }) => rest);
+}
+
+export async function findUserByUsername(
+  username: string
+): Promise<User | undefined> {
+  const users = await getUsersData();
+  return users.find((u) => u.username === username);
+}
+
+export async function createUser(
+  username: string,
+  password: string
+): Promise<Omit<User, "password">> {
+  const users = await getUsersData();
+  if (users.find((u) => u.username === username)) {
+    throw new Error("El usuario ya existe");
+  }
+  const newUser: User = {
+    id: String(Date.now()),
+    username,
+    password: hashPassword(password),
+    role: "user",
+    createdAt: new Date().toISOString(),
+  };
+  users.push(newUser);
+  await saveUsers(users);
+  const { password: _, ...rest } = newUser;
+  return rest;
+}
+
+export async function deleteUser(id: string): Promise<void> {
+  let users = await getUsersData();
+  const user = users.find((u) => u.id === id);
+  if (!user) throw new Error("Usuario no encontrado");
+  if (user.role === "admin") throw new Error("No se puede eliminar al admin");
+  users = users.filter((u) => u.id !== id);
+  await saveUsers(users);
+}
