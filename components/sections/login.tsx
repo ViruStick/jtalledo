@@ -171,7 +171,7 @@ function Login() {
               ) : (
                 <div className="flex items-center gap-2">
                   <TbLogin2 className="w-5 h-5" />
-                  Iniciar Sesión
+                  Iniciar sesión
                 </div>
               )}
             </Button>
