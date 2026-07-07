@@ -27,6 +27,7 @@ export async function seedAdmin(): Promise<void> {
   const adminName = process.env.ADMIN_NAME || "Administrador";
   const adminUsername = process.env.ADMIN_USERNAME;
   const adminPassword = process.env.ADMIN_PASSWORD;
+  const adminDespacho = process.env.ADMIN_DESPACHO;
 
   if (!adminUsername || !adminPassword) {
     throw new Error("ADMIN_USERNAME and ADMIN_PASSWORD must be set");
@@ -42,9 +43,15 @@ export async function seedAdmin(): Promise<void> {
   }
 
   const existingAdmin = users.find((u) => u.role === "admin");
-  if (existingAdmin && existingAdmin.name !== adminName) {
-    existingAdmin.name = adminName;
-    needsSave = true;
+  if (existingAdmin) {
+    if (existingAdmin.name !== adminName) {
+      existingAdmin.name = adminName;
+      needsSave = true;
+    }
+    if (adminDespacho && existingAdmin.despachoFiscal !== adminDespacho) {
+      existingAdmin.despachoFiscal = adminDespacho;
+      needsSave = true;
+    }
   }
 
   if (needsSave) await saveUsers(users);
@@ -57,6 +64,7 @@ export async function seedAdmin(): Promise<void> {
       password: hashPassword(adminPassword),
       role: "admin",
       createdAt: new Date().toISOString(),
+      despachoFiscal: adminDespacho || undefined,
     });
     await saveUsers(users);
   }
