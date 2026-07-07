@@ -82,27 +82,27 @@ export default function HomeClient({ user }: HomeClientProps) {
   };
 
   const menuDisposiciones = [
-    "Aperturas",
-    "Ampliaciones",
+    "Apertura",
+    "Ampliación",
     "Formalización",
     "Conclusión",
-    "Archivos",
-    "Elevación de Actuados",
-    "Derivaciones",
+    "Archivo",
+    "Elevación de actuados",
+    "Derivación",
     "Acumulación",
     "Impulso",
   ];
 
   const menuRequerimientos = [
-    "Detención Preliminar",
-    "Prisión Preventiva",
-    "Prolongación de Prisión Preventiva",
-    "Levantamiento del Secreto de las Comunicaciones",
-    "Levantamiento del Secreto Bancario",
+    "Detención preliminar",
+    "Prisión preventiva",
+    "Prolongación de prisión preventiva",
+    "Levantamiento del secreto de las comunicaciones",
+    "Levantamiento del secreto bancario",
     "Acusación",
     "Sobreseimiento",
-    "Terminación Anticipada",
-    "Conclusión Anticipada",
+    "Terminación anticipada",
+    "Conclusión anticipada",
   ];
 
   return (
