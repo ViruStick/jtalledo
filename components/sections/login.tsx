@@ -73,10 +73,10 @@ function Login() {
               </div>
               <div className="bg-gray-50 flex flex-col items-center justify-center p-4 rounded-2xl text-center w-full border border-gray-200 mt-4">
                 <span className="font-semibold text-sm">
-                  "La automatización no reemplaza el criterio
+                  "La automatización no reemplaza el criterio.
                 </span>
                 <span className="font-semibold text-sm">
-                  no todos los procesos tienen que ser iguales: algunos pueden
+                  No todos los procesos tienen que ser iguales; algunos pueden
                   ser mejores."
                 </span>
               </div>
@@ -180,7 +180,7 @@ function Login() {
           <div className="text-center mt-4 text-sm text-muted-foreground">
             <p>¿No tienes una cuenta?</p>
             <div className="text-gray-800 font-semibold flex items-center justify-center gap-2">
-              ¡Qué Pena! 😔
+              ¡Qué Pena! 😔 Esto no es para todos...
             </div>
           </div>
         </CardContent>
