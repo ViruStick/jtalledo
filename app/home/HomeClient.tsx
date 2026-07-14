@@ -18,6 +18,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
+import DisposicionForm from "@/components/DisposicionForm";
 
 interface HomeClientProps {
   user: {
@@ -37,6 +38,12 @@ export default function HomeClient({ user }: HomeClientProps) {
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [subMenu, setSubMenu] = useState<string | null>(null);
+  const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
+
+  const templateMapping: Record<string, string> = {
+    Archivo: "disposiciones/archivo",
+  };
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -106,13 +113,16 @@ export default function HomeClient({ user }: HomeClientProps) {
   ];
 
   return (
-    <div className="m-8 rounded-4xl overflow-hidden h-[calc(100vh-4rem)] bg-gray-200 grid grid-cols-[280px_1fr]">
+    <div className="m-4 2xl:m-8 rounded-4xl overflow-hidden h-[calc(100vh-2rem)] 2xl:h-[calc(100vh-4rem)] bg-gray-200 grid grid-cols-[280px_1fr]">
       <aside className="bg-gray-200 flex flex-col h-full">
         <nav className="bg-white rounded-2xl flex-1 p-4 2xl:p-6 mx-3 mt-3">
           <h2 className="text-2xl font-bold mb-4">Menú</h2>
           <div className="flex flex-col gap-2">
             <button
-              onClick={() => setActiveMenu("disposiciones")}
+              onClick={() => {
+                setActiveMenu("disposiciones");
+                setSubMenu(null);
+              }}
               className={cn(
                 "w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer",
                 activeMenu === "disposiciones"
@@ -123,7 +133,10 @@ export default function HomeClient({ user }: HomeClientProps) {
               Disposiciones
             </button>
             <button
-              onClick={() => setActiveMenu("requerimientos")}
+              onClick={() => {
+                setActiveMenu("requerimientos");
+                setSubMenu(null);
+              }}
               className={cn(
                 "w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer",
                 activeMenu === "requerimientos"
@@ -151,7 +164,7 @@ export default function HomeClient({ user }: HomeClientProps) {
           </div>
         </nav>
 
-        <div className="flex justify-between bg-white rounded-2xl p-3 m-3">
+        <div className="flex justify-center gap-8 bg-white rounded-2xl p-3 m-3">
           <div className="flex flex-col items-center gap-1">
             <button
               onClick={openPicker}
@@ -208,11 +221,61 @@ export default function HomeClient({ user }: HomeClientProps) {
       </aside>
 
       <main className="bg-white my-3 mr-3 rounded-2xl p-6">
-        {activeMenu === "disposiciones" ? (
+        {activeMenu === "disposiciones" &&
+        subMenu === "archivo" &&
+        !selectedDoc ? (
+          <div className="h-full flex flex-col">
+            <button
+              onClick={() => setSubMenu(null)}
+              className="self-start flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4 cursor-pointer"
+            >
+              <MdOutlineKeyboardArrowLeft />
+              <p>Atrás</p>
+            </button>
+            <div className="grid grid-cols-3 gap-4">
+              {["Archivo", "Archivo liminar", "Consentida"].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => setSelectedDoc(item)}
+                  className="flex items-center justify-center rounded-xl border border-gray-200 bg-gray-50 p-6 text-xl font-medium text-gray-700 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors cursor-pointer"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : activeMenu === "disposiciones" &&
+          subMenu === "archivo" &&
+          selectedDoc ? (
+          <div className="h-full flex flex-col">
+            <button
+              onClick={() => setSelectedDoc(null)}
+              className="self-start flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4 cursor-pointer"
+            >
+              <MdOutlineKeyboardArrowLeft />
+              <p>Atrás</p>
+            </button>
+            {templateMapping[selectedDoc] ? (
+              <DisposicionForm
+                templateSubdir={templateMapping[selectedDoc]}
+                title={selectedDoc}
+              />
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-400 text-lg">
+                Plantilla no disponible para "{selectedDoc}"
+              </div>
+            )}
+          </div>
+        ) : activeMenu === "disposiciones" ? (
           <div className="grid grid-cols-3 gap-4 h-full">
             {menuDisposiciones.map((disposicion) => (
               <button
                 key={disposicion}
+                onClick={() => {
+                  if (disposicion === "Archivo") {
+                    setSubMenu("archivo");
+                  }
+                }}
                 className="flex items-center justify-center rounded-xl border border-gray-200 bg-gray-50 p-6 text-xl font-medium text-gray-700 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors cursor-pointer"
               >
                 {disposicion}

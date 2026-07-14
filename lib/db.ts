@@ -1,5 +1,5 @@
 import { kv } from "@vercel/kv";
-import { hashPassword } from "./auth";
+import { hashPassword, comparePassword } from "./auth";
 
 const USERS_KEY = "users";
 
@@ -48,8 +48,16 @@ export async function seedAdmin(): Promise<void> {
       existingAdmin.name = adminName;
       needsSave = true;
     }
+    if (existingAdmin.username !== adminUsername) {
+      existingAdmin.username = adminUsername;
+      needsSave = true;
+    }
     if (adminDespacho && existingAdmin.despachoFiscal !== adminDespacho) {
       existingAdmin.despachoFiscal = adminDespacho;
+      needsSave = true;
+    }
+    if (!comparePassword(adminPassword, existingAdmin.password)) {
+      existingAdmin.password = hashPassword(adminPassword);
       needsSave = true;
     }
   }
