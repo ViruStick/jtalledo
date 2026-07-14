@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { LuLoaderCircle } from "react-icons/lu";
 import { Input } from "./ui/input";
@@ -13,6 +13,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface SelectOption {
   label: string;
@@ -30,17 +38,23 @@ interface Template {
 interface DisposicionFormProps {
   templateSubdir: string;
   title?: string;
+  userName: string;
+  onBack?: () => void;
 }
 
 export default function DisposicionForm({
   templateSubdir,
   title,
+  userName,
+  onBack,
 }: DisposicionFormProps) {
   const [template, setTemplate] = useState<Template | null>(null);
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const initialDataRef = useRef<Record<string, string>>({});
 
   const readOnlyMarkers = useMemo(() => {
     const set = new Set<string>();
@@ -76,6 +90,7 @@ export default function DisposicionForm({
           t.markers.forEach((m: string) => {
             initial[m] = "";
           });
+          initialDataRef.current = initial;
           setFormData(initial);
         } else {
           setError("No se encontró ninguna plantilla en esta categoría");
@@ -122,11 +137,16 @@ export default function DisposicionForm({
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${template!.name}.docx`;
+      const sanitize = (s: string) => s.replace(/[/\\:*?"<>|]/g, "-");
+      const parts = [formData.Carpeta_fiscal, formData.Delito, userName].filter(
+        Boolean,
+      );
+      a.download = parts.map(sanitize).join("-").trim() + ".docx";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
+      setShowSuccessDialog(true);
     } catch (e) {
       setError(
         e instanceof Error ? e.message : "Error al generar el documento",
@@ -228,6 +248,48 @@ export default function DisposicionForm({
         </Button>
         {error && <p className="text-red-500 text-sm">{error}</p>}
       </div>
+
+      <AlertDialog
+        open={showSuccessDialog}
+        onOpenChange={(open) => !open && setShowSuccessDialog(false)}
+      >
+        <AlertDialogContent size="xs">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-semibold">
+              Documento generado exitosamente
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              ¿Qué deseas hacer a continuación?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="flex flex-col gap-2 pb-4">
+            <Button
+              onClick={() => setShowSuccessDialog(false)}
+              className="bg-blue-600 hover:bg-blue-500 text-white cursor-pointer"
+            >
+              Continuar editando
+            </Button>
+            <Button
+              onClick={() => {
+                setFormData({ ...initialDataRef.current });
+                setShowSuccessDialog(false);
+              }}
+              className="bg-red-600 hover:bg-red-500 text-white cursor-pointer"
+            >
+              Limpiar datos
+            </Button>
+            <Button
+              onClick={() => {
+                setShowSuccessDialog(false);
+                onBack?.();
+              }}
+              className="cursor-pointer"
+            >
+              Volver a inicio
+            </Button>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

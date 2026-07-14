@@ -259,6 +259,12 @@ export default function HomeClient({ user }: HomeClientProps) {
               <DisposicionForm
                 templateSubdir={templateMapping[selectedDoc]}
                 title={selectedDoc}
+                userName={user.name}
+                onBack={() => {
+                  setSelectedDoc(null);
+                  setSubMenu(null);
+                  setActiveMenu(null);
+                }}
               />
             ) : (
               <div className="flex items-center justify-center h-full text-gray-400 text-lg">
