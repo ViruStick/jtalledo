@@ -4,11 +4,11 @@ export interface SelectOption {
 }
 
 export const selectOptions: Record<string, SelectOption[]> = {
-  Articulo_de_ley: [
+  Delito: [
     {
-      label:
-        "Artículo 2. Acceso ilícito, modificado por el Artículo 2 del Decreto Legislativo Nº 1614.",
+      label: "1. Acceso ilícito",
       fill: {
+        Delito: "Acceso ilícito",
         Articulo_de_ley:
           "Artículo 2. Acceso ilícito, modificado por el Artículo 2 del Decreto Legislativo Nº 1614.",
         Contenido_del_articulo: `Artículo 2. Acceso ilícito
@@ -17,9 +17,9 @@ Si el agente accede deliberada e ilegítimamente, en todo o en parte, al sistema
       },
     },
     {
-      label:
-        "Artículo 3. Atentado a la integridad de datos informáticos, modificado por el Artículo 1 de la Ley N° 30171.",
+      label: "2. Atentado a la integridad de datos informáticos",
       fill: {
+        Delito: "Atentado a la integridad de datos informáticos",
         Articulo_de_ley:
           "Artículo 3. Atentado a la integridad de datos informáticos, modificado por el Artículo 1 de la Ley N° 30171.",
         Contenido_del_articulo: `Artículo 3. Atentado a la integridad de datos informáticos
@@ -27,9 +27,9 @@ El que deliberada e ilegítimamente daña, introduce, borra, deteriora, altera, 
       },
     },
     {
-      label:
-        "Artículo 4. Atentado a la integridad de sistemas informáticos, modificado por el Artículo 1 de la Ley N° 30171.",
+      label: "3. Atentado a la integridad de sistemas informáticos",
       fill: {
+        Delito: "Atentado a la integridad de sistemas informáticos",
         Articulo_de_ley:
           "Artículo 4. Atentado a la integridad de sistemas informáticos, modificado por el Artículo 1 de la Ley N° 30171.",
         Contenido_del_articulo: `Artículo 4. Atentado a la integridad de sistemas informáticos
@@ -38,8 +38,10 @@ El que deliberada e ilegítimamente inutiliza, total o parcialmente, un sistema 
     },
     {
       label:
-        "Artículo 5. Proposiciones a niños, niñas y adolescentes con fines sexuales por medios tecnológicos, modificado por el Artículo 2 del Decreto Legislativo Nº 1591.",
+        "4. Proposiciones a niños, niñas y adolescentes con fines sexuales por medios tecnológicos",
       fill: {
+        Delito:
+          "Proposiciones a niños, niñas y adolescentes con fines sexuales por medios tecnológicos",
         Articulo_de_ley:
           "Artículo 5. Proposiciones a niños, niñas y adolescentes con fines sexuales por medios tecnológicos, modificado por el Artículo 2 del Decreto Legislativo Nº 1591.",
         Contenido_del_articulo: `Artículo 5. Proposiciones a niños, niñas y adolescentes con fines sexuales por medios tecnológicos
@@ -50,8 +52,10 @@ En todos los casos se impone, además, la pena de inhabilitación conforme a los
     },
     {
       label:
-        "Artículo 5-A.- Chantaje sexual con materiales elaborados o modificados por medios digitales o tecnológicos, Artículo incorporado por el Artículo 4 del Decreto Legislativo Nº 1625.",
+        "5. Chantaje sexual con materiales elaborados o modificados por medios digitales o tecnológicos",
       fill: {
+        Delito:
+          "Chantaje sexual con materiales elaborados o modificados por medios digitales o tecnológicos",
         Articulo_de_ley:
           "Artículo 5-A.- Chantaje sexual con materiales elaborados o modificados por medios digitales o tecnológicos, Artículo incorporado por el Artículo 4 del Decreto Legislativo Nº 1625.",
         Contenido_del_articulo: `Artículo 5-A.- Chantaje sexual con materiales elaborados o modificados por medios digitales o tecnológicos
@@ -63,9 +67,9 @@ La pena privativa de libertad será no menor de tres ni mayor de cinco años e i
       },
     },
     {
-      label:
-        "Artículo 7. Interceptación de datos informáticos, modificado por el Artículo 1 de la Ley N° 30171.",
+      label: "6. Interceptación de datos informáticos",
       fill: {
+        Delito: "Interceptación de datos informáticos",
         Articulo_de_ley:
           "Artículo 7. Interceptación de datos informáticos, modificado por el Artículo 1 de la Ley N° 30171.",
         Contenido_del_articulo: `Artículo 7. Interceptación de datos informáticos
@@ -76,9 +80,9 @@ Si el agente comete el delito como integrante de una organización criminal, la 
       },
     },
     {
-      label:
-        "Artículo 8. Fraude informático, modificado por el Artículo 2 del Decreto Legislativo Nº 1614.",
+      label: "7. Fraude informático",
       fill: {
+        Delito: "Fraude informático",
         Articulo_de_ley:
           "Artículo 8. Fraude informático, modificado por el Artículo 2 del Decreto Legislativo Nº 1614.",
         Contenido_del_articulo: `Artículo 8. Fraude informático
@@ -88,9 +92,9 @@ La misma pena se aplica al que intencionalmente colabora con la comisión de alg
       },
     },
     {
-      label:
-        "Artículo 8-A. Préstamos informáticos extorsivos, Artículo incorporado por el Artículo 2 de la Ley Nº 32183.",
+      label: "8. Préstamos informáticos extorsivos",
       fill: {
+        Delito: "Préstamos informáticos extorsivos",
         Articulo_de_ley:
           "Artículo 8-A. Préstamos informáticos extorsivos, Artículo incorporado por el Artículo 2 de la Ley Nº 32183.",
         Contenido_del_articulo: `Artículo 8-A. Préstamos informáticos extorsivos
@@ -103,9 +107,9 @@ d) La comisión del hecho punible es de carácter transnacional, de acuerdo al n
       },
     },
     {
-      label:
-        "Artículo 9. Suplantación de identidad, modificado por el Artículo 2 del Decreto Legislativo Nº 1591.",
+      label: "9. Suplantación de identidad",
       fill: {
+        Delito: "Suplantación de identidad",
         Articulo_de_ley:
           "Artículo 9. Suplantación de identidad, modificado por el Artículo 2 del Decreto Legislativo Nº 1591.",
         Contenido_del_articulo: `Artículo 9. Suplantación de identidad
@@ -115,8 +119,10 @@ La pena privativa de libertad es no menor de seis ni mayor de nueve años cuando
     },
     {
       label:
-        "Artículo 9-A.- Activación de una SIM Card o de una línea de servicio móvil sin consentimiento del titular, Artículo incorporado por el Artículo 1 de la Ley Nº 32451.",
+        "10. Activación de una SIM Card o de una línea de servicio móvil sin consentimiento del titular",
       fill: {
+        Delito:
+          "Activación de una SIM Card o de una línea de servicio móvil sin consentimiento del titular",
         Articulo_de_ley:
           "Artículo 9-A.- Activación de una SIM Card o de una línea de servicio móvil sin consentimiento del titular, Artículo incorporado por el Artículo 1 de la Ley Nº 32451.",
         Contenido_del_articulo: `Artículo 9-A.- Activación de una SIM Card o de una línea de servicio móvil sin consentimiento del titular
@@ -124,9 +130,9 @@ El que, mediante sistemas informáticos u otro mecanismo, active una SIM Card o 
       },
     },
     {
-      label:
-        "Artículo 10. Abuso de mecanismos y dispositivos informáticos, Artículo modificado por el Artículo 1 de la Ley N° 30171.",
+      label: "11. Abuso de mecanismos y dispositivos informáticos",
       fill: {
+        Delito: "Abuso de mecanismos y dispositivos informáticos",
         Articulo_de_ley:
           "Artículo 10. Abuso de mecanismos y dispositivos informáticos, Artículo modificado por el Artículo 1 de la Ley N° 30171.",
         Contenido_del_articulo: `Artículo 10. Abuso de mecanismos y dispositivos informáticos

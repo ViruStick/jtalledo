@@ -164,7 +164,7 @@ export default function HomeClient({ user }: HomeClientProps) {
           </div>
         </nav>
 
-        <div className="flex justify-center gap-8 bg-white rounded-2xl p-3 m-3">
+        <div className="flex justify-between bg-white rounded-2xl p-3 m-3">
           <div className="flex flex-col items-center gap-1">
             <button
               onClick={openPicker}
