@@ -5,6 +5,14 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { DESPACHOS } from "@/lib/despachos";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -137,6 +145,7 @@ export default function AdminUsersClient() {
     if (res.ok) {
       toast.success(`Usuario "${editUsername}" actualizado correctamente`);
       setEditTarget(null);
+
       fetchUsers();
     } else {
       const data = await res.json();
@@ -242,13 +251,21 @@ export default function AdminUsersClient() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="new-despacho">Despacho Fiscal</Label>
-                  <Input
-                    id="new-despacho"
-                    type="text"
+                  <Select
                     value={despachoFiscal}
-                    onChange={(e) => setDespachoFiscal(e.target.value)}
-                    placeholder="Despacho Fiscal"
-                  />
+                    onValueChange={(value) => setDespachoFiscal(value ?? "")}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Seleccionar despacho..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {DESPACHOS.map((d) => (
+                        <SelectItem key={d} value={d}>
+                          {d}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="new-password">Contraseña</Label>
@@ -646,62 +663,90 @@ export default function AdminUsersClient() {
         </AlertDialogContent>
       </AlertDialog>
 
-      <AlertDialog
-        open={!!editTarget}
-        onOpenChange={(open) => !open && setEditTarget(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Editar Usuario</AlertDialogTitle>
-            <AlertDialogDescription>
-              Editando a <strong>{editTarget?.name}</strong>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="edit-name">Nombre</Label>
-              <Input
-                id="edit-name"
-                type="text"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                placeholder="Nombre completo"
-              />
+      {editTarget && (
+        <>
+          <div
+            className="fixed inset-0 z-50 bg-black/80 duration-100 supports-backdrop-filter:backdrop-blur-xs"
+            onClick={() => {
+              setEditTarget(null);
+            }}
+          />
+          <div
+            className="fixed top-1/2 left-1/2 z-50 grid w-full max-w-sm -translate-x-1/2 -translate-y-1/2 grid-cols-1 gap-6 rounded-4xl bg-popover p-6 text-popover-foreground ring-1 ring-foreground/5 duration-100 outline-none"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                setEditTarget(null);
+              }
+            }}
+          >
+            <div className="grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center">
+              <h2 className="font-heading text-lg font-medium">
+                Editar Usuario
+              </h2>
+              <p className="text-sm text-balance text-muted-foreground">
+                Editando a <strong>{editTarget.name}</strong>
+              </p>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-username">Usuario</Label>
-              <Input
-                id="edit-username"
-                type="text"
-                value={editUsername}
-                onChange={(e) => setEditUsername(e.target.value)}
-                placeholder="Nombre de usuario"
-              />
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-name">Nombre</Label>
+                <Input
+                  id="edit-name"
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  placeholder="Nombre completo"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-username">Usuario</Label>
+                <Input
+                  id="edit-username"
+                  type="text"
+                  value={editUsername}
+                  onChange={(e) => setEditUsername(e.target.value)}
+                  placeholder="Nombre de usuario"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-despacho">Despacho Fiscal</Label>
+                <Select
+                  value={editDespachoFiscal}
+                  onValueChange={(value) => setEditDespachoFiscal(value ?? "")}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Seleccionar despacho..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DESPACHOS.map((d) => (
+                      <SelectItem key={d} value={d}>
+                        {d}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-despacho">Despacho Fiscal</Label>
-              <Input
-                id="edit-despacho"
-                type="text"
-                value={editDespachoFiscal}
-                onChange={(e) => setEditDespachoFiscal(e.target.value)}
-                placeholder="Despacho Fiscal"
-              />
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <Button
+                variant="outline"
+                className="cursor-pointer"
+                onClick={() => {
+                  setEditTarget(null);
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={confirmEdit}
+                className="bg-indigo-500 hover:bg-indigo-600 text-white cursor-pointer"
+              >
+                Guardar
+              </Button>
             </div>
           </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="cursor-pointer">
-              Cancelar
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmEdit}
-              className="bg-indigo-500 hover:bg-indigo-600 text-white cursor-pointer"
-            >
-              Guardar
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        </>
+      )}
     </div>
   );
 }

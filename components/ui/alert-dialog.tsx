@@ -61,6 +61,8 @@ function AlertDialogOverlay({
 function AlertDialogContent({
   className,
   size = "default",
+  onPointerDownOutside,
+  onEscapeKeyDown,
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Content> & {
   size?:
@@ -76,6 +78,8 @@ function AlertDialogContent({
     | "5xl"
     | "6xl"
     | "7xl";
+  onPointerDownOutside?: (e: CustomEvent) => void;
+  onEscapeKeyDown?: (e: CustomEvent) => void;
 }) {
   const maxW = size === "default" ? "max-w-xs sm:max-w-md" : `max-w-${size}`;
 
@@ -85,6 +89,7 @@ function AlertDialogContent({
       <AlertDialogPrimitive.Content
         data-slot="alert-dialog-content"
         data-size={size}
+        {...({ onPointerDownOutside, onEscapeKeyDown } as any)}
         className={cn(
           "group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 gap-6 rounded-4xl bg-popover p-6 text-popover-foreground ring-1 ring-foreground/5 duration-100 outline-none",
           maxW,
@@ -139,10 +144,7 @@ function AlertDialogFooter({
 }
 
 const defaultLikeMedia = defaultLikeSizes
-  .map(
-    (s) =>
-      `sm:group-data-[size=${s}]/alert-dialog-content:row-span-2`,
-  )
+  .map((s) => `sm:group-data-[size=${s}]/alert-dialog-content:row-span-2`)
   .join(" ");
 
 function AlertDialogMedia({

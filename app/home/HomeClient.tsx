@@ -192,9 +192,8 @@ export default function HomeClient({ user }: HomeClientProps) {
             {user.role === "admin" && (
               <Button
                 onClick={() => router.push("/dashboard")}
-                className="w-full gap-1 bg-blue-600 hover:bg-blue-500 text-white cursor-pointer"
+                className="w-full bg-blue-600 hover:bg-blue-500 text-white cursor-pointer text-sm"
               >
-                <MdOutlineKeyboardArrowLeft />
                 <p className="text-xs">Centro control</p>
               </Button>
             )}
@@ -210,8 +209,7 @@ export default function HomeClient({ user }: HomeClientProps) {
                   <p className="text-xs">Cerrando sesión...</p>
                 </div>
               ) : (
-                <div className="flex items-center gap-1">
-                  <TbLogin />
+                <div className="flex items-center">
                   <p className="text-xs">Cerrar sesión</p>
                 </div>
               )}
@@ -317,36 +315,40 @@ export default function HomeClient({ user }: HomeClientProps) {
               Elige una imagen para tu perfil o selecciona "Ninguno"
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="grid grid-cols-4 gap-3 py-4 max-h-100 overflow-y-auto">
-            <button
-              onClick={() => setSelectedAvatar(null)}
-              className={cn(
-                "flex items-center justify-center aspect-square rounded-full border-2 transition-all cursor-pointer",
-                selectedAvatar === null
-                  ? "border-blue-600 ring-2 ring-blue-400 bg-blue-50"
-                  : "border-dashed border-gray-300 hover:border-gray-400 bg-gray-50",
-              )}
-            >
-              <span className="text-xs font-medium text-gray-500">Ninguno</span>
-            </button>
-            {avatarsList.map((filename) => (
+          <div className="overflow-y-auto py-4" style={{ maxHeight: "24rem" }}>
+            <div className="grid grid-cols-4 gap-4">
               <button
-                key={filename}
-                onClick={() => setSelectedAvatar(filename)}
+                onClick={() => setSelectedAvatar(null)}
                 className={cn(
-                  "rounded-full overflow-hidden aspect-square cursor-pointer border-2 transition-all hover:border-blue-500",
-                  selectedAvatar === filename
-                    ? "border-blue-600 ring-2 ring-blue-400"
-                    : "border-transparent",
+                  "flex items-center justify-center aspect-square rounded-full border-2 transition-all cursor-pointer",
+                  selectedAvatar === null
+                    ? "border-blue-600 ring-2 ring-blue-400 bg-blue-50"
+                    : "border-dashed border-gray-300 hover:border-gray-400 bg-gray-50",
                 )}
               >
-                <img
-                  src={`/avatars/${filename}`}
-                  alt={filename}
-                  className="w-full h-full object-cover"
-                />
+                <span className="text-xs font-medium text-gray-500">
+                  Ninguno
+                </span>
               </button>
-            ))}
+              {avatarsList.map((filename) => (
+                <button
+                  key={filename}
+                  onClick={() => setSelectedAvatar(filename)}
+                  className={cn(
+                    "rounded-full overflow-hidden aspect-square cursor-pointer border-2 transition-all hover:border-blue-500",
+                    selectedAvatar === filename
+                      ? "border-blue-600 ring-2 ring-blue-400"
+                      : "border-transparent",
+                  )}
+                >
+                  <img
+                    src={`/avatars/${filename}`}
+                    alt={filename}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel className="cursor-pointer">
