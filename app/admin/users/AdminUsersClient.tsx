@@ -31,11 +31,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
-import { MdDelete } from "react-icons/md";
-import { RiEdit2Fill } from "react-icons/ri";
-import { PiPasswordBold } from "react-icons/pi";
-import { FaPlus } from "react-icons/fa";
+import {
+  KeyRound,
+  Trash,
+  Undo2,
+  UserRoundPen,
+  UserRoundPlus,
+} from "lucide-react";
 import { LuLoaderCircle } from "react-icons/lu";
 
 interface User {
@@ -203,17 +205,14 @@ export default function AdminUsersClient() {
 
   return (
     <div className="min-h-screen p-4 sm:p-8">
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <h1 className="text-xl sm:text-2xl font-bold text-white">
-            Gestión de Usuarios
-          </h1>
+          <h1 className="text-xl sm:text-2xl font-bold">Gestión de Usuarios</h1>
           <Button
             onClick={() => router.push("/dashboard")}
-            variant="secondary"
             className="w-full sm:w-auto cursor-pointer"
           >
-            <MdOutlineKeyboardArrowLeft />
+            <Undo2 />
             Centro Control
           </Button>
         </div>
@@ -221,7 +220,7 @@ export default function AdminUsersClient() {
         <div className="grid grid-cols-1 md:grid-cols-9 gap-6">
           <Card className="col-span-1 md:col-span-5">
             <CardHeader>
-              <CardTitle className="text-blue-600 font-bold text-lg">
+              <CardTitle className="font-bold text-lg">
                 Crear Nuevo Usuario
               </CardTitle>
             </CardHeader>
@@ -373,7 +372,7 @@ export default function AdminUsersClient() {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+                  className="w-full mt-4 cursor-pointer"
                   disabled={loading}
                 >
                   {loading ? (
@@ -383,7 +382,7 @@ export default function AdminUsersClient() {
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">
-                      <FaPlus className="mb-0.5" />
+                      <UserRoundPlus className="mb-0.5" />
                       <p>Crear Usuario</p>
                     </div>
                   )}
@@ -395,12 +394,8 @@ export default function AdminUsersClient() {
           <Card className="col-span-1 md:col-span-4">
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                <p className="text-blue-600 font-bold text-lg">
-                  Usuarios Registrados
-                </p>
-                <Badge className="bg-gray-800 w-6 h-6 font-bold">
-                  {users.length}
-                </Badge>
+                <p className="font-bold text-lg">Usuarios Registrados</p>
+                <Badge className="w-6 h-6 font-bold">{users.length}</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -409,11 +404,11 @@ export default function AdminUsersClient() {
                   No hay usuarios registrados
                 </p>
               ) : (
-                <div className="space-y-3 max-h-105 overflow-y-auto">
+                <div className="space-y-3 max-h-105 overflow-y-auto pr-4">
                   {users.map((user) => (
                     <div
                       key={user.id}
-                      className="flex flex-row items-center justify-between p-3 bg-muted rounded-xl"
+                      className="flex flex-col items-start justify-between p-3 gap-4 bg-muted rounded-xl"
                     >
                       <div className="flex flex-col items-start gap-1">
                         <div>
@@ -440,23 +435,23 @@ export default function AdminUsersClient() {
                             {user.despachoFiscal || "—"}
                           </span>
                         </div>
-                        <div>
+                        <div className="flex items-center gap-2">
                           <span className="font-semibold text-sm text-muted-foreground">
                             Permiso:{" "}
                           </span>
                           <Badge
-                            className={`text-sm px-1.5 py-2.5 rounded-sm ${
+                            className={`flex items-center justify-center text-sm px-2 py-2 rounded-full ${
                               user.role === "admin"
                                 ? "bg-green-600 text-white"
                                 : "bg-indigo-600 text-white"
                             }`}
                           >
-                            {user.role === "admin" ? "Admin" : "Usuario"}
+                            <p>{user.role === "admin" ? "Admin" : "Usuario"}</p>
                           </Badge>
                         </div>
                       </div>
                       {user.role !== "admin" && (
-                        <div className="flex flex-col gap-1">
+                        <div className="flex w-full justify-start gap-2">
                           <Tooltip>
                             <TooltipTrigger
                               render={
@@ -466,7 +461,7 @@ export default function AdminUsersClient() {
                                 />
                               }
                             >
-                              <RiEdit2Fill className="text-white w-4 h-4" />
+                              <UserRoundPen className="text-white w-4 h-4" />
                             </TooltipTrigger>
                             <TooltipContent>Editar usuario</TooltipContent>
                           </Tooltip>
@@ -479,7 +474,7 @@ export default function AdminUsersClient() {
                                 />
                               }
                             >
-                              <PiPasswordBold className="text-white w-4 h-4" />
+                              <KeyRound className="text-white w-4 h-4" />
                             </TooltipTrigger>
                             <TooltipContent>Resetear Contraseña</TooltipContent>
                           </Tooltip>
@@ -492,7 +487,7 @@ export default function AdminUsersClient() {
                                 />
                               }
                             >
-                              <MdDelete className="text-white w-4 h-4" />
+                              <Trash className="text-white w-4 h-4" />
                             </TooltipTrigger>
                             <TooltipContent>Eliminar usuario</TooltipContent>
                           </Tooltip>
@@ -514,7 +509,7 @@ export default function AdminUsersClient() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Eliminar usuario</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription className="text-start">
               ¿Estás seguro de eliminar a{" "}
               <strong>{deleteTarget?.username}</strong>? Esta acción no se puede
               deshacer.

@@ -10,10 +10,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { TbLogin } from "react-icons/tb";
 import { LuLoaderCircle } from "react-icons/lu";
-import { HiUsers } from "react-icons/hi";
-import { MdEditDocument } from "react-icons/md";
 
 interface DashboardClientProps {
   user: {
@@ -50,16 +47,15 @@ export default function DashboardClient({ user }: DashboardClientProps) {
             <>
               <Button
                 onClick={() => router.push("/home")}
-                className="w-full gap-2 bg-indigo-600 hover:bg-indigo-500 text-white cursor-pointer"
+                className="w-full gap-2 cursor-pointer"
               >
-                <MdEditDocument />
-                Ir al menu principal
+                Panel principal
               </Button>
               <Button
                 onClick={() => router.push("/admin/users")}
-                className="w-full gap-2 bg-blue-600 hover:bg-blue-500 text-white cursor-pointer"
+                variant="outline"
+                className="w-full gap-2 cursor-pointer"
               >
-                <HiUsers />
                 Gestionar usuarios
               </Button>
             </>
@@ -67,8 +63,9 @@ export default function DashboardClient({ user }: DashboardClientProps) {
 
           <Button
             onClick={handleLogout}
+            variant="destructive"
             disabled={loggingOut}
-            className="w-full bg-red-600 hover:bg-red-500 text-white cursor-pointer"
+            className="w-full cursor-pointer"
           >
             {loggingOut ? (
               <div className="flex items-center gap-2">
@@ -77,7 +74,6 @@ export default function DashboardClient({ user }: DashboardClientProps) {
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <TbLogin />
                 <p>Cerrar sesión</p>
               </div>
             )}

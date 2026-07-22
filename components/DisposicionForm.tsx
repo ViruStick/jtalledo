@@ -219,7 +219,7 @@ export default function DisposicionForm({
                 readOnly
                 value={formData[marker] || ""}
                 rows={4}
-                className="resize-none cursor-default bg-gray-50"
+                className="resize-none cursor-default"
               />
             ) : (
               <Input
@@ -235,7 +235,7 @@ export default function DisposicionForm({
         <Button
           onClick={handleSubmit}
           disabled={loading}
-          className="bg-green-600 hover:bg-green-500 text-white cursor-pointer"
+          className="cursor-pointer"
         >
           {loading ? (
             <div className="flex items-center gap-1">
@@ -265,7 +265,7 @@ export default function DisposicionForm({
           <div className="flex flex-col gap-2 pb-4">
             <Button
               onClick={() => setShowSuccessDialog(false)}
-              className="bg-blue-600 hover:bg-blue-500 text-white cursor-pointer"
+              className="cursor-pointer"
             >
               Continuar editando
             </Button>
@@ -274,7 +274,7 @@ export default function DisposicionForm({
                 setFormData({ ...initialDataRef.current });
                 setShowSuccessDialog(false);
               }}
-              className="bg-red-600 hover:bg-red-500 text-white cursor-pointer"
+              className="cursor-pointer"
             >
               Limpiar datos
             </Button>
