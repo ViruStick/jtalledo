@@ -1,19 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "@/lib/auth";
+import { requireAuth, AuthError } from "@/lib/require-auth";
 import { scanTemplates } from "@/lib/templates";
 import { selectOptions } from "@/lib/select-options";
 
 export async function GET(request: NextRequest) {
-  const token = request.cookies.get("token")?.value;
-
-  if (!token) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
-
   try {
-    verifyToken(token);
+    requireAuth(request);
   } catch {
-    return NextResponse.json({ error: "Token inválido" }, { status: 401 });
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
   const subdir = request.nextUrl.searchParams.get("path") || undefined;

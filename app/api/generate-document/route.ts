@@ -1,18 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "@/lib/auth";
+import { requireAuth, AuthError } from "@/lib/require-auth";
 import { generateDocument } from "@/lib/templates";
 
 export async function POST(request: NextRequest) {
-  const token = request.cookies.get("token")?.value;
-
-  if (!token) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
-
   try {
-    verifyToken(token);
+    requireAuth(request);
   } catch {
-    return NextResponse.json({ error: "Token inválido" }, { status: 401 });
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
   try {

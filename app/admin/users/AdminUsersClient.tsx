@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DESPACHOS } from "@/lib/despachos";
+import { parseUserAgent } from "@/lib/user-agent";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -47,6 +48,9 @@ interface User {
   role: string;
   createdAt: string;
   despachoFiscal?: string;
+  lastLoginIp?: string;
+  lastLoginAt?: string;
+  lastLoginUserAgent?: string;
 }
 
 export default function AdminUsersClient() {
@@ -448,6 +452,30 @@ export default function AdminUsersClient() {
                           >
                             <p>{user.role === "admin" ? "Admin" : "Usuario"}</p>
                           </Badge>
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1 space-y-0.5">
+                          <p>
+                            Última IP:{" "}
+                            <span className="font-mono">
+                              {user.lastLoginIp ?? "Sin registro"}
+                            </span>
+                          </p>
+                          <p>
+                            Último acceso:{" "}
+                            {user.lastLoginAt
+                              ? new Intl.DateTimeFormat("es-PE", {
+                                  dateStyle: "medium",
+                                  timeStyle: "short",
+                                  timeZone: "America/Lima",
+                                }).format(new Date(user.lastLoginAt))
+                              : "Nunca registrado"}
+                          </p>
+                          <p>
+                            Dispositivo:{" "}
+                            {user.lastLoginUserAgent
+                              ? parseUserAgent(user.lastLoginUserAgent)
+                              : "Sin información"}
+                          </p>
                         </div>
                       </div>
                       {user.role !== "admin" && (

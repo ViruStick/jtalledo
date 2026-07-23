@@ -1,22 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "@/lib/auth";
+import { requireAdmin, AuthError } from "@/lib/require-auth";
 import { getUsers, createUser, deleteUser, resetPassword, updateUser } from "@/lib/db";
 
-function checkAdmin(request: NextRequest) {
-  const token = request.cookies.get("token")?.value;
-  if (!token) return null;
-  try {
-    const payload = verifyToken(token);
-    if (payload.role !== "admin") return null;
-    return payload;
-  } catch {
-    return null;
-  }
-}
-
 export async function GET(request: NextRequest) {
-  const admin = checkAdmin(request);
-  if (!admin) {
+  try {
+    requireAdmin(request);
+  } catch (e) {
+    if (e instanceof AuthError) {
+      return NextResponse.json({ error: e.message }, { status: e.statusCode });
+    }
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
   const users = await getUsers();
@@ -24,8 +16,12 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const admin = checkAdmin(request);
-  if (!admin) {
+  try {
+    requireAdmin(request);
+  } catch (e) {
+    if (e instanceof AuthError) {
+      return NextResponse.json({ error: e.message }, { status: e.statusCode });
+    }
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
@@ -46,8 +42,12 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
-  const admin = checkAdmin(request);
-  if (!admin) {
+  try {
+    requireAdmin(request);
+  } catch (e) {
+    if (e instanceof AuthError) {
+      return NextResponse.json({ error: e.message }, { status: e.statusCode });
+    }
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
@@ -69,8 +69,12 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const admin = checkAdmin(request);
-  if (!admin) {
+  try {
+    requireAdmin(request);
+  } catch (e) {
+    if (e instanceof AuthError) {
+      return NextResponse.json({ error: e.message }, { status: e.statusCode });
+    }
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
@@ -92,8 +96,12 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  const admin = checkAdmin(request);
-  if (!admin) {
+  try {
+    requireAdmin(request);
+  } catch (e) {
+    if (e instanceof AuthError) {
+      return NextResponse.json({ error: e.message }, { status: e.statusCode });
+    }
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 

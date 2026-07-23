@@ -12,6 +12,9 @@ export interface User {
   createdAt: string;
   avatar?: string;
   despachoFiscal?: string;
+  lastLoginIp?: string;
+  lastLoginAt?: string;
+  lastLoginUserAgent?: string;
 }
 
 async function getUsersData(): Promise<User[]> {
@@ -139,6 +142,35 @@ export async function updateAvatar(
   } else {
     delete user.avatar;
   }
+  await saveUsers(users);
+}
+
+export async function updateUserLoginMetadata(
+  userId: string,
+  metadata: {
+    lastLoginIp?: string;
+    lastLoginAt: string;
+    lastLoginUserAgent?: string;
+  }
+): Promise<void> {
+  const users = await getUsersData();
+  const user = users.find((u) => u.id === userId);
+  if (!user) throw new Error("Usuario no encontrado");
+
+  user.lastLoginAt = metadata.lastLoginAt;
+
+  if (metadata.lastLoginIp !== undefined) {
+    user.lastLoginIp = metadata.lastLoginIp;
+  } else {
+    delete user.lastLoginIp;
+  }
+
+  if (metadata.lastLoginUserAgent !== undefined) {
+    user.lastLoginUserAgent = metadata.lastLoginUserAgent;
+  } else {
+    delete user.lastLoginUserAgent;
+  }
+
   await saveUsers(users);
 }
 
