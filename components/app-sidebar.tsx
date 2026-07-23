@@ -15,6 +15,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarSeparator,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { NavUser } from "@/components/nav-user";
 import {
@@ -24,10 +25,8 @@ import {
 } from "@/components/ui/collapsible";
 import {
   MdOutlineDescription,
-  MdOutlineAssignment,
   MdOutlinePendingActions,
   MdOutlineNoteAdd,
-  MdOutlineDashboard,
   MdOutlineContactMail,
 } from "react-icons/md";
 import { HiOutlineDocumentText } from "react-icons/hi2";
@@ -83,13 +82,14 @@ export function AppSidebar({
   user,
   ...props
 }: AppSidebarProps) {
+  const { isMobile, setOpenMobile } = useSidebar();
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" tooltip="JTF">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              <div className="flex aspect-square size-8 items-center justify-center rounded-full bg-sidebar-primary text-sidebar-primary-foreground">
                 <Monitor className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -135,6 +135,7 @@ export function AppSidebar({
                             onClick={() => {
                               setSubMenu(item.toLowerCase());
                               setSelectedDoc(null);
+                              if (isMobile) setOpenMobile(false);
                             }}
                           >
                             <span>{item}</span>
@@ -175,6 +176,7 @@ export function AppSidebar({
                             onClick={() => {
                               setSubMenu(item.toLowerCase());
                               setSelectedDoc(null);
+                              if (isMobile) setOpenMobile(false);
                             }}
                           >
                             <span>{item}</span>
@@ -193,6 +195,7 @@ export function AppSidebar({
                     setActiveMenu("providencias");
                     setSubMenu(null);
                     setSelectedDoc(null);
+                    if (isMobile) setOpenMobile(false);
                   }}
                   tooltip="Providencias"
                 >
@@ -208,6 +211,7 @@ export function AppSidebar({
                     setActiveMenu("actas");
                     setSubMenu(null);
                     setSelectedDoc(null);
+                    if (isMobile) setOpenMobile(false);
                   }}
                   tooltip="Actas"
                 >
@@ -223,6 +227,7 @@ export function AppSidebar({
                     setActiveMenu("declaraciones");
                     setSubMenu(null);
                     setSelectedDoc(null);
+                    if (isMobile) setOpenMobile(false);
                   }}
                   tooltip="Declaraciones"
                 >
@@ -238,6 +243,7 @@ export function AppSidebar({
                     setActiveMenu("oficios");
                     setSubMenu(null);
                     setSelectedDoc(null);
+                    if (isMobile) setOpenMobile(false);
                   }}
                   tooltip="Oficios"
                 >
@@ -253,6 +259,7 @@ export function AppSidebar({
                     setActiveMenu("directorio");
                     setSubMenu(null);
                     setSelectedDoc(null);
+                    if (isMobile) setOpenMobile(false);
                   }}
                   tooltip="Directorio"
                 >

@@ -34,7 +34,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard } from "lucide-react";
+import { HardDrive, LayoutDashboard } from "lucide-react";
 
 interface NavUserProps {
   user: {
@@ -161,7 +161,7 @@ export function NavUser({ user }: NavUserProps) {
               {user.role === "admin" && (
                 <DropdownMenuGroup>
                   <DropdownMenuItem onClick={() => router.push("/dashboard")}>
-                    <LayoutDashboard />
+                    <HardDrive />
                     Centro Control
                   </DropdownMenuItem>
                 </DropdownMenuGroup>

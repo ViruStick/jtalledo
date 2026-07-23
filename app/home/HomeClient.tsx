@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { PanelLeft } from "lucide-react";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import DisposicionForm from "@/components/DisposicionForm";
+import { GradientCard } from "@/components/gradient-card";
 
 interface HomeClientProps {
   user: {
@@ -46,7 +48,7 @@ export default function HomeClient({ user }: HomeClientProps) {
           {activeMenu && subMenu === "archivo" && !selectedDoc ? (
             <div className="h-full flex flex-col">
               <button
-                onClick={() => setSubMenu(null)}
+                onClick={() => { setSubMenu(null); setActiveMenu(null); }}
                 className="self-start flex items-center gap-1 text-sm mb-4 cursor-pointer"
               >
                 <MdOutlineKeyboardArrowLeft />
@@ -54,13 +56,9 @@ export default function HomeClient({ user }: HomeClientProps) {
               </button>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {["Archivo", "Archivo liminar", "Consentida"].map((item) => (
-                  <button
-                    key={item}
-                    onClick={() => setSelectedDoc(item)}
-                    className="flex items-center justify-center rounded-xl bg-muted hover:bg-muted/80 p-6 font-medium transition-colors cursor-pointer"
-                  >
+                  <GradientCard key={item} onClick={() => setSelectedDoc(item)}>
                     {item}
-                  </button>
+                  </GradientCard>
                 ))}
               </div>
             </div>
@@ -95,8 +93,9 @@ export default function HomeClient({ user }: HomeClientProps) {
               Plantilla no disponible para &quot;{subMenu}&quot;
             </div>
           ) : (
-            <div className="flex items-center justify-center text-muted-foreground text-lg h-full">
-              Selecciona una opción del menú
+            <div className="flex flex-col items-center justify-center gap-3 text-muted-foreground h-full">
+              <PanelLeft className="size-10" strokeWidth={1.5} />
+              <p className="text-lg">Selecciona una opción del menú</p>
             </div>
           )}
         </div>
