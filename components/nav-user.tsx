@@ -34,6 +34,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { LayoutDashboard } from "lucide-react";
 
 interface NavUserProps {
   user: {
@@ -157,6 +158,14 @@ export function NavUser({ user }: NavUserProps) {
                   </div>
                 </DropdownMenuLabel>
               </DropdownMenuGroup>
+              {user.role === "admin" && (
+                <DropdownMenuGroup>
+                  <DropdownMenuItem onClick={() => router.push("/dashboard")}>
+                    <LayoutDashboard />
+                    Centro Control
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem
