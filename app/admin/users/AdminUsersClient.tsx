@@ -465,7 +465,7 @@ export default function AdminUsersClient() {
                             {user.lastLoginAt
                               ? new Intl.DateTimeFormat("es-PE", {
                                   dateStyle: "medium",
-                                  timeStyle: "short",
+                                  timeStyle: "medium",
                                   timeZone: "America/Lima",
                                 }).format(new Date(user.lastLoginAt))
                               : "Nunca registrado"}
